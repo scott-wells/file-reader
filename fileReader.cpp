@@ -3,28 +3,24 @@
 #include <string>
 using namespace std;
 
-void readFile();
+void readFile(ifstream &inputFile);
 void readEachChar();
 void writeFile();
 int countEachLine();
 int countFileBytes(ifstream &inputFile);
+void insertToFileNthLine(ifstream &inputFile, ofstream &outputFile, int num);
 
 int main() {
-
-    // readFile();
-    // readEachChar();
-    // writeFile();
-    // int total = countEachLine();
-    // cout << total << endl;
     ifstream inputFile("fun.txt");
-    int bytes = countFileBytes(inputFile);
-    cout << "\n" << "File contains " << bytes << " bytes" << endl;
+    ofstream outputFile("blank.txt");
+    ifstream modifiedFile("blank.txt");
+
+    insertToFileNthLine(inputFile, outputFile, 10);
+    readFile(modifiedFile);
     return 0;
 }
 
-void readFile() {
-    ifstream inputFile("ipsum.txt");
-
+void readFile(ifstream &inputFile) {
     if(inputFile.is_open()){
         string line;
         while(getline(inputFile, line)){    
@@ -91,4 +87,31 @@ int countFileBytes(ifstream &inputFile) {
         cout << "File failed to open" << endl;
     }
     return bytes;
+}
+
+void insertToFileNthLine(ifstream &inputFile, ofstream &outputFile, int num) {
+    if(!inputFile) {
+        cout << "Failed to open input file for reading" << endl;
+        return;
+    }
+
+    if(!outputFile) {
+        cout << "Failed to open output file for writing" << endl;
+        inputFile.close();
+        return;
+    }
+
+    string line;
+    int count;
+    string newLine = "XX. THIS IS A BRAND NEW LINE!";
+
+    while(getline(inputFile, line)) {
+        count++;
+        if(count == num) {
+            outputFile << newLine << endl;
+        }
+        outputFile << line << endl;
+    }
+    inputFile.close();
+    outputFile.close();
 }
