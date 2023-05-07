@@ -3,24 +3,28 @@
 #include <string>
 using namespace std;
 
-void readFile(ifstream &inputFile);
-void readEachChar();
-void writeFile();
-int countEachLine();
-int countFileBytes(ifstream &inputFile);
-void insertToFileNthLine(ifstream &inputFile, ofstream &outputFile, int num);
+void readFile(const string &fileName);
+void readEachChar(const string &fileName);
+void writeFile(const string &fileName);
+int countEachLine(const string &fileName);
+int countFileBytes(const string &fileName);
+void insertToFileNthLine(const string &inputFileName, const string &outputFileName, int num);
+void deleteFileContents(const string &fileName);
 
 int main() {
     ifstream inputFile("fun.txt");
     ofstream outputFile("blank.txt");
     ifstream modifiedFile("blank.txt");
 
-    insertToFileNthLine(inputFile, outputFile, 10);
-    readFile(modifiedFile);
+    // insertToFileNthLine(inputFile, outputFile, 10);
+    // readFile(modifiedFile);
+    deleteFileContents("blank.txt");
     return 0;
 }
 
-void readFile(ifstream &inputFile) {
+void readFile(const string &fileName) {
+    ifstream inputFile(fileName);
+
     if(inputFile.is_open()){
         string line;
         while(getline(inputFile, line)){    
@@ -32,8 +36,8 @@ void readFile(ifstream &inputFile) {
     }
 }
 
-void readEachChar() {
-    ifstream inputFile("blank.txt");
+void readEachChar(const string &fileName) {
+    ifstream inputFile(fileName);
 
     if(inputFile.is_open()) {
         char e;
@@ -45,8 +49,8 @@ void readEachChar() {
     }
 }
 
-void writeFile() {
-    ofstream outputFile("blank.txt");
+void writeFile(const string &fileName) {
+    ofstream outputFile(fileName);
 
     if(outputFile.is_open()){
         outputFile << "Hello World!" << endl;
@@ -58,8 +62,8 @@ void writeFile() {
     }
 }
 
-int countEachLine() {
-    ifstream input("fun.txt");
+int countEachLine(const string &fileName) {
+    ifstream input(fileName);
     int numLines;
     string line;
     if(input.is_open()) {
@@ -76,8 +80,10 @@ int countEachLine() {
     return numLines;
 }
 
-int countFileBytes(ifstream &inputFile) {
+int countFileBytes(const string &fileName) {
+    ifstream inputFile(fileName);
     int bytes;
+
     if(inputFile.is_open()) {
         char e;
         while(inputFile.get(e)) {
@@ -89,12 +95,14 @@ int countFileBytes(ifstream &inputFile) {
     return bytes;
 }
 
-void insertToFileNthLine(ifstream &inputFile, ofstream &outputFile, int num) {
+void insertToFileNthLine(const string &inputFileName, const string &outputFileName, int num) {
+    ifstream inputFile(inputFileName);
+    ofstream outputFile(outputFileName);
+
     if(!inputFile) {
         cout << "Failed to open input file for reading" << endl;
         return;
     }
-
     if(!outputFile) {
         cout << "Failed to open output file for writing" << endl;
         inputFile.close();
@@ -113,5 +121,17 @@ void insertToFileNthLine(ifstream &inputFile, ofstream &outputFile, int num) {
         outputFile << line << endl;
     }
     inputFile.close();
+    outputFile.close();
+}
+
+void deleteFileContents(const string &fileName) {
+    ofstream outputFile(fileName);
+
+    if(!outputFile) {
+        cout << "Failed to open output file" << endl;
+        return;
+    }
+
+    outputFile << "";
     outputFile.close();
 }
